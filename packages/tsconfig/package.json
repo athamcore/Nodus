@@ -1,0 +1,11 @@
+{
+  "name": "@nodus/tsconfig",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.json",
+  "files": [
+    "mobile.json",
+    "node.json",
+    "react-library.json"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "nodus",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Nodus — Intelligent Academic Memory for the Classroom",
+  "scripts": {
+    "install:all": "pnpm install",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "test": "pnpm -r run test",
+    "dev:mobile": "pnpm --filter @nodus/mobile dev",
+    "dev:api": "pnpm --filter @nodus/api dev",
+    "build": "pnpm -r run build",
+    "clean": "pnpm -r run clean"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.4.0"
+}

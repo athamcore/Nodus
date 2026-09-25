@@ -16,10 +16,12 @@ Nodus/
 ├── packages/
 │   ├── shared-types/    # Shared contracts and types
 │   ├── api-client/      # Typed API client
-│   └── validation/      # Shared validation schemas
+│   ├── validation/      # Shared validation schemas
+│   └── tsconfig/        # Shared TypeScript configurations
 ├── infrastructure/      # Deployment/infrastructure configuration
 ├── tests/               # Cross-system and acceptance tests
-└── docs/                # Product and engineering specifications
+├── docs/                # Product and engineering specifications
+└── .github/             # CI/CD workflows
 ```
 
 ## Documentation
@@ -172,6 +174,208 @@ Agents must:
 
 ## Project status
 
-**Current stage:** Specification complete / Phase 0 validated / Phase 1 ready.
+**Current stage:** Specification complete / Phase 0 validated / Phase 1 scaffold complete (not feature-complete).
 
-The next step is repository and application scaffolding.
+### Phase 1 Implementation Summary
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Monorepo (pnpm workspaces) | ✅ Implemented | 6 packages, pnpm-lock.yaml committed |
+| Mobile shell (Expo + TypeScript + Expo Router) | ✅ Scaffold | 4 tabs, placeholder screens, Phase 1 notices |
+| API shell (FastAPI + Pydantic) | ✅ Scaffold | Health endpoints, config, logging, security stubs |
+| Shared types package | ✅ Implemented | Domain type definitions |
+| Validation package | ✅ Implemented | Zod schemas for all domain entities |
+| API client package | ✅ Scaffold | Typed client with placeholder methods |
+| TypeScript strict mode | ✅ Enforced | All packages |
+| ESLint + Prettier (Ruff) | ✅ Configured | All packages |
+| pytest + Jest | ✅ Configured | Baseline tests added |
+| CI (GitHub Actions) | ✅ Configured | Lint, typecheck, test |
+
+### NOT Implemented in Phase 1 (per scope)
+
+- Audio recording, background recording, screen-off recording
+- Recording recovery
+- Cloud sync / upload queue
+- Speech-to-text / transcription
+- AI notes / importance detection
+- RAG / Ask Lecture
+- OCR / visual capture
+- Professor workflows
+- Search implementation
+- Production authentication (JWT scaffold only)
+- Production database (SQLAlchemy scaffold only, no migrations)
+- Production storage (interfaces only)
+
+## Prerequisites
+
+- **Node.js** >= 20.0.0
+- **pnpm** >= 9.0.0
+- **Python** >= 3.11
+- **Expo CLI** (for mobile development): `pnpm add -g expo-cli`
+- **Git**
+
+## Installation
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd Nodus
+
+# Install all dependencies (root + all workspaces)
+pnpm install
+
+# Or install individually:
+# pnpm -r install
+```
+
+## Development Commands
+
+### Root Workspace
+
+```bash
+# Install all dependencies
+pnpm install
+
+# Run lint across all packages
+pnpm lint
+
+# Run typecheck across all packages
+pnpm typecheck
+
+# Run tests across all packages
+pnpm test
+
+# Clean all build artifacts
+pnpm clean
+```
+
+### Mobile App (`apps/mobile`)
+
+```bash
+# Start Expo development server
+pnpm dev:mobile
+# or
+cd apps/mobile && pnpm dev
+
+# Run lint
+cd apps/mobile && pnpm lint
+
+# Run typecheck
+cd apps/mobile && pnpm typecheck
+
+# Run tests
+cd apps/mobile && pnpm test
+
+# Build for production (requires EAS)
+cd apps/mobile && pnpm build:ios
+cd apps/mobile && pnpm build:android
+```
+
+**Mobile Environment Setup:**
+
+```bash
+cd apps/mobile
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+### API Server (`apps/api`)
+
+```bash
+# Start development server
+pnpm dev:api
+# or
+cd apps/api && pnpm dev
+
+# Run lint
+cd apps/api && pnpm lint
+
+# Run format check
+cd apps/api && pnpm format:check
+
+# Run typecheck
+cd apps/api && pnpm typecheck
+
+# Run tests
+cd apps/api && pnpm test
+```
+
+**API Environment Setup:**
+
+```bash
+cd apps/api
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+### Shared Packages
+
+```bash
+# Build all packages
+cd packages/shared-types && pnpm build
+cd packages/validation && pnpm build
+cd packages/api-client && pnpm build
+
+# Run lint/typecheck/test per package
+cd packages/shared-types && pnpm lint && pnpm typecheck && pnpm test
+cd packages/validation && pnpm lint && pnpm typecheck && pnpm test
+cd packages/api-client && pnpm lint && pnpm typecheck && pnpm test
+```
+
+## Test Commands
+
+```bash
+# All tests
+pnpm test
+
+# Mobile only
+cd apps/mobile && pnpm test
+
+# API only
+cd apps/api && pnpm test
+
+# Packages only
+cd packages/shared-types && pnpm test
+cd packages/validation && pnpm test
+cd packages/api-client && pnpm test
+```
+
+## CI/CD
+
+GitHub Actions workflow (`.github/workflows/ci.yml`) runs on every push and PR:
+
+- Mobile: lint, typecheck, test
+- Packages: lint, typecheck, test (per package)
+- API: lint, format check, typecheck, test with coverage
+- Root: install verification
+
+## Architecture Decisions (Unresolved)
+
+The following vendor decisions are intentionally deferred and must not be hardcoded:
+
+| Decision | Status | Phase |
+|----------|--------|-------|
+| Authentication provider | Deferred | Phase 3 |
+| PostgreSQL hosting | Deferred | Phase 2 |
+| S3-compatible storage | Deferred | Phase 9 |
+| Speech-to-text provider | Deferred | Phase 10 |
+| LLM provider | Deferred | Phase 12 |
+| OCR provider | Deferred | Phase 15 |
+| Embedding provider | Deferred | Phase 11 |
+| Deployment platform | Deferred | Phase 21 |
+| Queue implementation | Deferred | Phase 2 |
+
+Provider interfaces are defined as TypeScript types in `packages/shared-types` and Zod schemas in `packages/validation`. Actual provider implementations do not exist in Phase 1.
+
+## Contributing
+
+1. Read the specification documents in `docs/`
+2. Follow the phased implementation plan
+3. Run lint, typecheck, and tests before committing
+4. Never commit secrets (use `.env` files, not committed)
+5. Keep mocked and production functionality separate
+6. Document significant architecture changes
+
+## License
+
+Proprietary — All rights reserved.
